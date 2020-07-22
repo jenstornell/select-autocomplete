@@ -25,7 +25,7 @@ Sätt strong på match
 // Stöd för flera klasser
 */
 
-class AutocompleteInput extends HTMLElement {
+class SelectAutocomplete extends HTMLElement {
   constructor() {
     super();
 
@@ -42,6 +42,9 @@ class AutocompleteInput extends HTMLElement {
   }
 
   connectedCallback() {
+    this.datalistToData();
+
+    console.log(this.data);
     this.innerHTML = `
       <label>
         <input placeholder="${this.getAttribute("placeholder")}">
@@ -49,16 +52,15 @@ class AutocompleteInput extends HTMLElement {
       <div></div>
     `;
 
-    this.setData();
     this.populate();
-    this.cacheInput();
+    this.storeInput();
     this.storeItems();
     this.storeList();
     this.storeClassActive();
     this.triggerEvents();
   }
 
-  cacheInput() {
+  storeInput() {
     this.input = this.querySelector("input");
   }
 
@@ -75,11 +77,10 @@ class AutocompleteInput extends HTMLElement {
     this.classActive = this.listEl.dataset.classActive;
   }
 
-  setData() {
-    const list = this.getAttribute("list");
-    const options = document.querySelectorAll(`#${list} option`);
-    this.data = {};
+  datalistToData() {
+    const options = this.querySelectorAll("datalist option");
 
+    this.data = {};
     options.forEach((option) => {
       this.data[option.value] = option.innerHTML;
     });
@@ -98,7 +99,7 @@ class AutocompleteInput extends HTMLElement {
       const item = document.createElement("div");
 
       item.textContent = title;
-      item.setAttribute("hidden", "");
+      // item.setAttribute("hidden", "");
       item.dataset.value = value;
       list.appendChild(item);
     }
@@ -278,26 +279,9 @@ class AutocompleteInput extends HTMLElement {
   }
 }
 
-customElements.define("input-autocomplete", AutocompleteInput);
+customElements.define("select-autocomplete", SelectAutocomplete);
 
 /*
     this.selectors = Object.assign(this.defaultSelectors(), this.o.selectors);
-    this.styles = Object.assign(this.defaultStyles(), this.o.styles);
-
-  onClickInput() {}
-
-  handleKeydown() {
-    this.filter();
-  }
-
-  handleClickInput(e) {}
-
-  triggerEventInputClick() {}
-
-  triggerItemClick() {
-    // VID KLICK EJ KEYDWN
-    this.customEventItemClick = new CustomEvent("click:item");
-    this.dispatchEvent(this.customEventItemClick);
-  }
 }
 */

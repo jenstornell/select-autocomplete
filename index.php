@@ -9,24 +9,25 @@
 </head>
 
 <body>
-  <input-autocomplete placeholder="Sök län..." list="colors_data"></input-autocomplete>
-  <datalist id="colors_data" data-class-wrap="input-autocomplete-list" data-class-active="active">
-    <option value="red">red</option>
-    <option value="orange">åäö</option>
-    <option value="green">green</option>
-    <option value="blue">The color of the sky</option>
-  </datalist>
+  <select-autocomplete placeholder="Sök län... ">
+    <datalist class="input-autocomplete-list" data-active="active">
+      <option value="red">red</option>
+      <option value="orange">åäö</option>
+      <option value="green">green</option>
+      <option value="blue">The color of the sky</option>
+    </datalist>
+  </select-autocomplete>
 
   Nånting annat
 
-  <script src="assets/js/autocomplete-input.js?t=<?= time(); ?>"></script>
+  <script src="assets/js/select-autocomplete.js?t=<?= time(); ?>"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       console.log(123);
-      document.querySelector('input-autocomplete').addEventListener('submit', (e) => {
+      /*document.querySelector('input-autocomplete').addEventListener('submit', (e) => {
         console.log('test');
         console.log(e);
-      });
+      });*/
     });
   </script>
 </body>
