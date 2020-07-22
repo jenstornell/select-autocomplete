@@ -1,0 +1,55 @@
+.red {
+  background: red;
+}
+
+.green {
+  background: green;
+}
+
+input-autocomplete {
+  position: relative;
+}
+
+input-autocomplete * {
+  box-sizing: border-box;
+}
+
+input-autocomplete input {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+input-autocomplete label {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  display: inline-block;
+}
+
+input-autocomplete label:focus-within {
+  border: 1px solid blue;
+}
+
+.input-autocomplete-list {
+  font-family: Arial;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  font-size: 0.875rem;
+  cursor: default;
+  color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  width: calc(100% - 4px);
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.input-autocomplete-list > div {
+  padding: 0.5rem;
+}
+
+.input-autocomplete-list > div.active {
+  background: #ddd;
+}
+
+.input-autocomplete-list > div:hover {
+  background: #eee;
+}
