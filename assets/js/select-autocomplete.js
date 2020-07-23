@@ -1,28 +1,22 @@
 /*
-filtered custom event
-input enter custom event
-Sätt strong på match
-
-// Custom kod - Clicka pil som en select box
 // Outside click event hide all
 
-// Pil icon
-// Pil toggle
+// Pil icon triangle hack
+// Pil toggle class
 // Vid klick i select, visa alla likt keydown
 
 // Dölj även wrapper vid dölj och visa den om items finns
 
-// Rensa
-// active vid key arrow
-// active vid mus
-
-// Fallbacks
+// FALLBACKS
 // classes
 // active class
 // placeholder
 
 // Testa multipla element
 // Stöd för flera klasser
+
+// Sätt strong på match
+// Custom kod - Clicka pil som en select box
 */
 
 class SelectAutocomplete extends HTMLElement {
@@ -34,81 +28,45 @@ class SelectAutocomplete extends HTMLElement {
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleClickItem = this.handleClickItem.bind(this);
+    this.handleHoverItem = this.handleHoverItem.bind(this);
     this.handleArrowdown = this.handleArrowdown.bind(this);
     this.handleArrowup = this.handleArrowup.bind(this);
     /*
-    this.handleClickItem = this.handleClickItem.bind(this);
     this.handleClickInput = this.handleClickInput.bind(this);*/
   }
 
   connectedCallback() {
-    this.datalistToData();
+    this.storage();
 
-    console.log(this.data);
-    this.innerHTML = `
-      <label>
-        <input placeholder="${this.getAttribute("placeholder")}">
-      </label>
-      <div></div>
-    `;
+    console.log(this.store);
 
-    this.populate();
-    this.storeInput();
-    this.storeItems();
-    this.storeList();
-    this.storeClassActive();
     this.triggerEvents();
   }
 
-  storeInput() {
-    this.input = this.querySelector("input");
-  }
+  storage() {
+    const list = this.querySelector("[data-list]");
+    let classActive = ["active"];
 
-  storeItems() {
-    this.items = this.querySelectorAll("div > div");
-  }
-
-  storeList() {
-    const listSelector = `#${this.getAttribute("list")}`;
-    this.listEl = document.querySelector(listSelector);
-  }
-
-  storeClassActive() {
-    this.classActive = this.listEl.dataset.classActive;
-  }
-
-  datalistToData() {
-    const options = this.querySelectorAll("datalist option");
-
-    this.data = {};
-    options.forEach((option) => {
-      this.data[option.value] = option.innerHTML;
-    });
-  }
-
-  populate() {
-    const listSelector = `#${this.getAttribute("list")}`;
-    const classes = document.querySelector(listSelector).dataset.classWrap;
-
-    let list = this.querySelector("div");
-
-    list.setAttribute("class", classes);
-
-    for (const value in this.data) {
-      const title = this.data[value];
-      const item = document.createElement("div");
-
-      item.textContent = title;
-      // item.setAttribute("hidden", "");
-      item.dataset.value = value;
-      list.appendChild(item);
+    if (list.getAttribute("data-active") !== null) {
+      classActive = list.dataset.active.split(/\s+/);
     }
+
+    console.log(classActive);
+
+    this.store = {
+      classActive: classActive,
+      input: this.querySelector("input"),
+      list: list,
+      items: this.querySelectorAll("[data-list] > div"),
+    };
+
+    console.log(this.store);
   }
 
   filter() {
-    this.items.forEach((el) => {
+    this.store.items.forEach((el) => {
       const value = el.innerHTML.toLowerCase();
-      const input = this.input.value.toLowerCase();
+      const input = this.store.input.value.toLowerCase();
 
       if (input.length > 0 && value.indexOf(input) > -1) {
         el.removeAttribute("hidden");
@@ -125,7 +83,7 @@ class SelectAutocomplete extends HTMLElement {
     this.dispatchEvent(
       new CustomEvent("submit", {
         detail: {
-          value: this.input.value,
+          value: this.store.input.value,
           title: "",
         },
       })
@@ -133,45 +91,42 @@ class SelectAutocomplete extends HTMLElement {
   }
 
   hideAll() {
-    this.items.forEach((el) => {
+    this.store.items.forEach((el) => {
       el.setAttribute("hidden", "");
     });
   }
 
   activate(el) {
     this.deactivateAll();
-    el.classList.add(this.classActive);
+    el.classList.add(...this.store.classActive);
     this.active = el;
   }
 
   deactivateAll() {
-    this.items.forEach((el) => {
-      el.classList.remove(this.classActive);
+    this.store.items.forEach((el) => {
+      el.classList.remove(...this.store.classActive);
     });
   }
 
   activateFirst() {
-    this.deactivateAll();
-
-    const root = this.items[0].parentNode;
-    const item = root.querySelector("div:not([hidden])");
+    const item = this.store.list.querySelector("div:not([hidden])");
     if (!item) return;
-
-    item.classList.add(this.classActive);
-    this.active = item;
-
-    console.log(this.active);
+    this.activate(item);
   }
 
   activateLast() {
-    this.deactivateAll();
-
-    const root = this.items[0].parentNode;
-    const item = root.querySelector("div:not([hidden]):last-of-type");
+    const item = this.store.list.querySelector(
+      "div:not([hidden]):last-of-type"
+    );
     if (!item) return;
 
-    item.classList.add(this.classActive);
-    this.active = item;
+    this.activate(item);
+  }
+
+  activateBySelector(selector) {
+    const item = this.store.list.querySelector(selector);
+    if (!item) return;
+    this.activate(item);
   }
 
   triggerEvents() {
@@ -179,32 +134,32 @@ class SelectAutocomplete extends HTMLElement {
     this.onEnter();
 
     this.onClickItem();
+    this.onHoverItem();
+
     this.onArrowdown();
     this.onArrowup();
     /*
-    
     this.onClickInput();*/
   }
 
   // Event keydown
   onKeydown() {
-    this.input.addEventListener("input", this.handleKeydown);
+    this.store.input.addEventListener("input", this.handleKeydown);
   }
 
   handleKeydown() {
     this.filter();
-    console.log("asdaas");
   }
 
   // Event enter
   onEnter() {
-    this.input.addEventListener("keydown", this.handleEnter);
+    this.store.input.addEventListener("keydown", this.handleEnter);
   }
 
   handleEnter(e) {
     if (e.keyCode === 13) {
       if (!this.done) {
-        this.input.value = this.active.innerHTML;
+        this.store.input.value = this.active.innerHTML;
         this.handleClickEnter();
         this.done = true;
       } else {
@@ -215,66 +170,67 @@ class SelectAutocomplete extends HTMLElement {
 
   // Event click item
   onClickItem() {
-    this.items.forEach((el) => {
+    this.store.items.forEach((el) => {
       el.addEventListener("click", this.handleClickItem);
     });
   }
 
   handleClickItem(e) {
-    this.input.value = e.currentTarget.innerHTML;
+    this.store.input.value = e.currentTarget.innerHTML;
     this.handleClickEnter();
-    //this.triggerItemClick();
   }
 
   handleClickEnter() {
     this.filter();
     this.hideAll();
-    this.input.focus();
+    this.store.input.focus();
   }
 
-  // Event arrow down
-  onArrowdown() {
-    this.input.addEventListener("keydown", this.handleArrowdown);
+  // Event hover item
+  onHoverItem() {
+    this.store.items.forEach((el) => {
+      el.addEventListener("mouseover", this.handleHoverItem);
+    });
   }
 
-  handleArrowdown(e) {
-    if (e.keyCode === 40) {
-      e.preventDefault();
-
-      let result = this.active.nextElementSibling;
-
-      while (result && result.hidden == true) {
-        result = result.nextElementSibling;
-      }
-
-      if (result) {
-        this.activate(result);
-      } else {
-        this.activateFirst();
-      }
-    }
+  handleHoverItem(e) {
+    this.activate(e.currentTarget);
   }
 
-  // Event arrow up
+  // Event arrow
   onArrowup() {
-    this.input.addEventListener("keydown", this.handleArrowup);
+    this.store.input.addEventListener("keydown", this.handleArrowup);
+  }
+
+  onArrowdown() {
+    this.store.input.addEventListener("keydown", this.handleArrowdown);
   }
 
   handleArrowup(e) {
     if (e.keyCode === 38) {
-      e.preventDefault();
+      const selector = "div:not([hidden]):last-of-type";
+      this.handleArrow(e, this.active.previousElementSibling, selector);
+    }
+  }
 
-      let result = this.active.previousElementSibling;
+  handleArrowdown(e) {
+    if (e.keyCode === 40) {
+      const selector = "div:not([hidden])";
+      this.handleArrow(e, this.active.nextElementSibling, selector);
+    }
+  }
 
-      while (result && result.hidden == true) {
-        result = result.previousElementSibling;
-      }
+  handleArrow(e, result, selector) {
+    e.preventDefault();
 
-      if (result) {
-        this.activate(result);
-      } else {
-        this.activateLast();
-      }
+    while (result && result.hidden == true) {
+      result = result.previousElementSibling;
+    }
+
+    if (result) {
+      this.activate(result);
+    } else {
+      this.activateBySelector(selector);
     }
   }
 }

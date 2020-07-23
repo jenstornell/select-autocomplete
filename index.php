@@ -9,13 +9,14 @@
 </head>
 
 <body>
-  <select-autocomplete placeholder="Sök län... ">
-    <datalist class="input-autocomplete-list" data-active="active">
-      <option value="red">red</option>
-      <option value="orange">åäö</option>
-      <option value="green">green</option>
-      <option value="blue">The color of the sky</option>
-    </datalist>
+  <select-autocomplete>
+    <label><input placeholder="Sök län... "></label>
+
+    <div data-list data-active="active sasda">
+      <div data-value="asda">asda</div>
+      <div data-value="abc">acbc122</div>
+      <div data-value="aabbb">aacccc</div>
+    </div>
   </select-autocomplete>
 
   Nånting annat
