@@ -12,8 +12,8 @@
   <select-autocomplete>
     <label><input placeholder="Sök län... "></label>
 
-    <div data-list data-active="active sasda">
-      <div data-value="asda">asda</div>
+    <div data-list hidden>
+      <div data-value="pp">a</div>
       <div data-value="abc">acbc122</div>
       <div data-value="aabbb">aacccc</div>
     </div>

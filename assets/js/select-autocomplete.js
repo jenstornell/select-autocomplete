@@ -1,22 +1,10 @@
 /*
-// Outside click event hide all
-
-// Pil icon triangle hack
-// Pil toggle class
 // Vid klick i select, visa alla likt keydown
-
-// Dölj även wrapper vid dölj och visa den om items finns
-
-// FALLBACKS
-// classes
-// active class
-// placeholder
-
 // Testa multipla element
-// Stöd för flera klasser
 
-// Sätt strong på match
-// Custom kod - Clicka pil som en select box
+// Klicka på pilen för att stänga?
+
+// V2 - Sätt strong på match
 */
 
 class SelectAutocomplete extends HTMLElement {
@@ -28,18 +16,18 @@ class SelectAutocomplete extends HTMLElement {
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleClickItem = this.handleClickItem.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.handleClickInput = this.handleClickInput.bind(this);
     this.handleHoverItem = this.handleHoverItem.bind(this);
     this.handleArrowdown = this.handleArrowdown.bind(this);
     this.handleArrowup = this.handleArrowup.bind(this);
+
     /*
     this.handleClickInput = this.handleClickInput.bind(this);*/
   }
 
   connectedCallback() {
     this.storage();
-
-    console.log(this.store);
-
     this.triggerEvents();
   }
 
@@ -51,32 +39,49 @@ class SelectAutocomplete extends HTMLElement {
       classActive = list.dataset.active.split(/\s+/);
     }
 
-    console.log(classActive);
-
     this.store = {
       classActive: classActive,
       input: this.querySelector("input"),
       list: list,
       items: this.querySelectorAll("[data-list] > div"),
     };
-
-    console.log(this.store);
   }
 
   filter() {
+    this.store.hasVisible = false;
+
     this.store.items.forEach((el) => {
       const value = el.innerHTML.toLowerCase();
       const input = this.store.input.value.toLowerCase();
 
       if (input.length > 0 && value.indexOf(input) > -1) {
         el.removeAttribute("hidden");
+        this.store.hasVisible = true;
       } else {
         el.setAttribute("hidden", "");
       }
     });
 
+    this.triggerListVisibility();
     this.activateFirst();
+    this.triggerMenuDirection();
     this.done = false;
+  }
+
+  triggerListVisibility() {
+    if (this.store.hasVisible) {
+      this.store.list.removeAttribute("hidden");
+    } else {
+      this.store.list.setAttribute("hidden", "");
+    }
+  }
+
+  triggerMenuDirection() {
+    if (this.store.hasVisible) {
+      this.dataset.open = "true";
+    } else {
+      this.dataset.open = "false";
+    }
   }
 
   customEventSubmit() {
@@ -91,9 +96,21 @@ class SelectAutocomplete extends HTMLElement {
   }
 
   hideAll() {
+    this.store.list.setAttribute("hidden", "");
     this.store.items.forEach((el) => {
       el.setAttribute("hidden", "");
     });
+    this.store.hasVisible = false;
+    this.triggerMenuDirection();
+  }
+
+  showAll() {
+    this.store.list.removeAttribute("hidden");
+    this.store.items.forEach((el) => {
+      el.removeAttribute("hidden");
+    });
+    this.store.hasVisible = true;
+    this.triggerMenuDirection();
   }
 
   activate(el) {
@@ -133,13 +150,13 @@ class SelectAutocomplete extends HTMLElement {
     this.onKeydown();
     this.onEnter();
 
+    this.onClickInput();
     this.onClickItem();
+    this.onClickOutside();
     this.onHoverItem();
 
     this.onArrowdown();
     this.onArrowup();
-    /*
-    this.onClickInput();*/
   }
 
   // Event keydown
@@ -168,6 +185,30 @@ class SelectAutocomplete extends HTMLElement {
     }
   }
 
+  // Event click input
+  onClickInput() {
+    this.store.input.addEventListener("click", this.handleClickInput);
+  }
+
+  handleClickInput() {
+    if (this.store.input.value == "") {
+      this.showAll();
+    } else {
+      this.filter();
+    }
+  }
+
+  // Event click outside
+  onClickOutside() {
+    window.addEventListener("click", this.handleClickOutside);
+  }
+
+  handleClickOutside(e) {
+    if (e.target.closest("select-autocomplete")) return;
+    this.hideAll();
+    this.triggerMenuDirection();
+  }
+
   // Event click item
   onClickItem() {
     this.store.items.forEach((el) => {
@@ -183,6 +224,7 @@ class SelectAutocomplete extends HTMLElement {
   handleClickEnter() {
     this.filter();
     this.hideAll();
+    this.triggerMenuDirection();
     this.store.input.focus();
   }
 
