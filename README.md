@@ -1,4 +1,6 @@
-# Autocomplete input
+# Select Autocomplete
+
+_Version 0.1_
 
 A select or input with autocomplete of predefined values.
 
