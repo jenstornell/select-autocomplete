@@ -23,8 +23,9 @@ A select or input with autocomplete of predefined values.
 
 Place it within `<head></head>`.
 
+<!-- prettier-ignore -->
 ```html
-<link rel="stylesheet" href="assets/css/select-autocomplete.css" />
+<link rel="stylesheet" href="assets/css/select-autocomplete.css">
 ```
 
 ### Javaascript
