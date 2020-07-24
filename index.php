@@ -6,17 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autocomplete input</title>
   <link rel="stylesheet" href="assets/css/autocomplete-input.css?t=<?= time(); ?>">
+
+  <style>
+    body {
+      font-family: arial;
+    }
+  </style>
 </head>
 
 <body>
   <form action="/action_page.php">
     <select-autocomplete>
-      <label><input name="whatever" placeholder="Sök län... " autocomplete="off"></label>
+      <label><input name="whatever" placeholder="Sök län... "></label>
 
       <datalist>
-        <option value="pp">a</option>
-        <option value="abc">båäöbc12</option>
-        <option value="aabb">aaccc</option>
+        <option value="pp">
+        <option value="abc">
+        <option value="aabb">
       </datalist>
     </select-autocomplete>
 
@@ -25,9 +31,9 @@
       <label><input placeholder="Sök nåt annat... "></label>
 
       <datalist>
-        <option value="pp">77</option>
-        <option value="abc">44</option>
-        <option value="aabb">77888</option>
+        <option value="77">
+        <option value="55 åäö">
+        <option value="78">
       </datalist>
     </select-autocomplete>
   </form>
@@ -39,11 +45,9 @@
   <script src="assets/js/select-autocomplete.js?t=<?= time(); ?>"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-      console.log(123);
-      /*document.querySelector('input-autocomplete').addEventListener('submit', (e) => {
-        console.log('test');
-        console.log(e);
-      });*/
+      document.querySelector('select-autocomplete').addEventListener('submit', (e) => {
+        console.log(e.detail);
+      });
     });
   </script>
 </body>

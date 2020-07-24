@@ -1,13 +1,10 @@
-body {
-  font-family: arial;
-}
-
 select-autocomplete {
   position: relative;
   display: inline-block;
 }
 
-select-autocomplete * select-autocomplete *:before,
+select-autocomplete *,
+select-autocomplete *:before,
 select-autocomplete *:after {
   box-sizing: border-box;
 }
@@ -19,6 +16,7 @@ select-autocomplete input {
   padding: 0.75rem;
   padding-right: 0;
   font-family: inherit;
+  font-size: inherit;
 }
 
 select-autocomplete label {
@@ -57,8 +55,10 @@ select-autocomplete [data-list] {
   position: absolute;
   width: 100%;
   border: 1px solid #ccc;
+  border-top: none;
   border-radius: 0.25rem;
-  margin-top: 0.25rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   background: #fff;
   z-index: 1;
 }
@@ -67,6 +67,6 @@ select-autocomplete [data-list] > div {
   padding: 0.5rem;
 }
 
-select-autocomplete [data-list] > div.active {
+select-autocomplete [data-list] > [data-active] {
   background: #eee;
 }

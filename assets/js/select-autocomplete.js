@@ -1,7 +1,4 @@
-/*
-// Rensa strong
-// Om man trycker på pil neråd när ingen är funnen, visa alla
-*/
+// Om man trycker på pil ikon neråd när ingen är funnen, visa alla
 
 class SelectAutocomplete extends HTMLElement {
   constructor() {
@@ -20,9 +17,10 @@ class SelectAutocomplete extends HTMLElement {
 
   connectedCallback() {
     this.populate();
+    this.storage();
     this.querySelector("datalist").remove();
     this.dataset.open = "false";
-    this.storage();
+    this.store.input.setAttribute("autocomplete", "off");
     this.triggerEvents();
   }
 
@@ -30,8 +28,7 @@ class SelectAutocomplete extends HTMLElement {
     let html = "";
 
     this.querySelectorAll("option").forEach((el) => {
-      console.log(el);
-      html += `<div data-value="${el.value}">${el.innerText}</div>\n`;
+      html += `<div>${el.value}</div>\n`;
     });
 
     html = `<div data-list hidden>${html}</div>`;
@@ -39,17 +36,9 @@ class SelectAutocomplete extends HTMLElement {
   }
 
   storage() {
-    const list = this.querySelector("[data-list]");
-    let classActive = ["active"];
-
-    if (list.getAttribute("data-active") !== null) {
-      classActive = list.dataset.active.split(/\s+/);
-    }
-
     this.store = {
-      classActive: classActive,
       input: this.querySelector("input"),
-      list: list,
+      list: this.querySelector("[data-list]"),
       items: this.querySelectorAll("[data-list] > div"),
     };
   }
@@ -92,12 +81,12 @@ class SelectAutocomplete extends HTMLElement {
     }
   }
 
+  // Custom event submit
   customEventSubmit() {
     this.dispatchEvent(
       new CustomEvent("submit", {
         detail: {
           value: this.store.input.value,
-          title: "",
         },
       })
     );
@@ -113,39 +102,40 @@ class SelectAutocomplete extends HTMLElement {
   }
 
   showAll() {
+    this.deactivateAll();
     this.store.list.removeAttribute("hidden");
+
     this.store.items.forEach((el) => {
+      this.stripTags(el);
       el.removeAttribute("hidden");
     });
     this.store.hasVisible = true;
     this.triggerMenuDirection();
   }
 
+  stripTags(el) {
+    el.innerHTML = el.innerText;
+  }
+
   activate(el) {
     this.deactivateAll();
-    el.classList.add(...this.store.classActive);
+    el.dataset.active = "";
     this.active = el;
   }
 
   deactivateAll() {
     this.store.items.forEach((el) => {
-      el.classList.remove(...this.store.classActive);
+      delete el.dataset.active;
     });
   }
 
   activateFirst() {
     const item = this.store.list.querySelector("div:not([hidden])");
-    if (!item) return;
-    this.activate(item);
-  }
-
-  activateLast() {
-    const item = this.store.list.querySelector(
-      "div:not([hidden]):last-of-type"
-    );
-    if (!item) return;
-
-    this.activate(item);
+    if (item) {
+      this.activate(item);
+    } else {
+      this.active = null;
+    }
   }
 
   activateBySelector(selector) {
@@ -184,8 +174,12 @@ class SelectAutocomplete extends HTMLElement {
 
   handleEnter(e) {
     if (e.keyCode === 13) {
-      if (!this.done) {
-        this.store.input.value = this.active.innerText;
+      if (this.store.input.value === "" && !this.active) {
+        this.showAll();
+      } else if (!this.done) {
+        if (this.active) {
+          this.store.input.value = this.active.innerText;
+        }
         this.handleClickEnter();
         this.done = true;
       } else {
@@ -284,7 +278,7 @@ class SelectAutocomplete extends HTMLElement {
   }
 
   handleArrowup(e) {
-    if (e.keyCode === 38) {
+    if (e.keyCode === 38 && this.active) {
       const selector = "div:not([hidden]):last-of-type";
       this.handleArrow(e, this.active.previousElementSibling, selector);
     }
@@ -292,8 +286,12 @@ class SelectAutocomplete extends HTMLElement {
 
   handleArrowdown(e) {
     if (e.keyCode === 40) {
-      const selector = "div:not([hidden]):first-of-type";
-      this.handleArrow(e, this.active.nextElementSibling, selector);
+      if (this.active) {
+        const selector = "div:not([hidden]):first-of-type";
+        this.handleArrow(e, this.active.nextElementSibling, selector);
+      } else {
+        this.activateFirst();
+      }
     }
   }
 
@@ -316,8 +314,3 @@ class SelectAutocomplete extends HTMLElement {
 }
 
 customElements.define("select-autocomplete", SelectAutocomplete);
-
-/*
-    this.selectors = Object.assign(this.defaultSelectors(), this.o.selectors);
-}
-*/
