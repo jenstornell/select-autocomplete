@@ -1,5 +1,6 @@
 select-autocomplete {
   position: relative;
+  display: inline-block;
 }
 
 select-autocomplete * {
@@ -16,25 +17,25 @@ select-autocomplete input {
 
 select-autocomplete label {
   border: 1px solid #ddd;
-  display: inline-block;
-  padding-right: calc(1rem + 15px);
+  display: inline-flex;
   cursor: default;
+  border-radius: 0.25rem;
+  overflow: hidden;
 }
 
-select-autocomplete label:before {
+select-autocomplete label:after {
   content: "";
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 5px solid rgba(0, 0, 0, 0.8);
-  transform: translate(-0.5rem, -50%);
-  position: absolute;
-  top: 50%;
-  right: 0.5rem;
-  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #eee;
+  opacity: 0.8;
+  width: 12px;
+  padding: 0 0.5rem;
 }
 
-select-autocomplete[data-open="false"] label:before {
-  transform: translate(-0.5rem, -50%) rotate(180deg);
+select-autocomplete[data-open="true"] label:after {
+  transform: rotate(180deg);
 }
 
 select-autocomplete label:focus-within,
@@ -50,7 +51,7 @@ select-autocomplete [data-list] {
   cursor: default;
   color: rgba(0, 0, 0, 0.8);
   position: absolute;
-  width: calc(100% - 4px);
+  width: 100%;
   border: 1px solid #ddd;
   border-top: none;
 }

@@ -1,34 +1,39 @@
 /*
-// Vid klick i select, visa alla likt keydown
-// Testa multipla element
-
-// Klicka på pilen för att stänga?
-
-// V2 - Sätt strong på match
+// Splitta strängen för strong
 */
 
 class SelectAutocomplete extends HTMLElement {
   constructor() {
     super();
 
-    console.log("testar");
-
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleClickItem = this.handleClickItem.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleClickInput = this.handleClickInput.bind(this);
+    this.handleClickLabel = this.handleClickLabel.bind(this);
     this.handleHoverItem = this.handleHoverItem.bind(this);
     this.handleArrowdown = this.handleArrowdown.bind(this);
     this.handleArrowup = this.handleArrowup.bind(this);
-
-    /*
-    this.handleClickInput = this.handleClickInput.bind(this);*/
   }
 
   connectedCallback() {
+    this.populate();
+    this.dataset.open = "false";
     this.storage();
     this.triggerEvents();
+  }
+
+  populate() {
+    let html = "";
+
+    this.querySelectorAll("option").forEach((el) => {
+      console.log(el);
+      html += `<div data-value="${el.value}">${el.innerHTML}</div>\n`;
+    });
+
+    html = `<div data-list hidden>${html}</div>`;
+    this.querySelector("datalist").insertAdjacentHTML("beforebegin", html);
   }
 
   storage() {
@@ -153,6 +158,7 @@ class SelectAutocomplete extends HTMLElement {
     this.onClickInput();
     this.onClickItem();
     this.onClickOutside();
+    this.onClickLabel();
     this.onHoverItem();
 
     this.onArrowdown();
@@ -190,12 +196,38 @@ class SelectAutocomplete extends HTMLElement {
     this.store.input.addEventListener("click", this.handleClickInput);
   }
 
-  handleClickInput() {
+  handleClickInput(e) {
+    e.stopPropagation();
+
     if (this.store.input.value == "") {
       this.showAll();
     } else {
       this.filter();
     }
+  }
+
+  // Event click label
+  onClickLabel() {
+    this.querySelector("label").addEventListener(
+      "click",
+      this.handleClickLabel
+    );
+  }
+
+  handleClickLabel(e) {
+    e.preventDefault();
+
+    if (this.dataset.open === "false") {
+      if (this.store.input.value === "") {
+        this.showAll();
+      } else {
+        this.filter();
+      }
+    } else {
+      this.hideAll();
+    }
+
+    this.store.input.focus();
   }
 
   // Event click outside
@@ -257,7 +289,7 @@ class SelectAutocomplete extends HTMLElement {
 
   handleArrowdown(e) {
     if (e.keyCode === 40) {
-      const selector = "div:not([hidden])";
+      const selector = "div:not([hidden]):first-of-type";
       this.handleArrow(e, this.active.nextElementSibling, selector);
     }
   }
@@ -266,7 +298,10 @@ class SelectAutocomplete extends HTMLElement {
     e.preventDefault();
 
     while (result && result.hidden == true) {
-      result = result.previousElementSibling;
+      result =
+        e.keyCode == 38
+          ? result.previousElementSibling
+          : result.nextElementSibling;
     }
 
     if (result) {

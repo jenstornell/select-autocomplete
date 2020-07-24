@@ -12,11 +12,22 @@
   <select-autocomplete>
     <label><input placeholder="Sök län... "></label>
 
-    <div data-list hidden>
-      <div data-value="pp">a</div>
-      <div data-value="abc">acbc122</div>
-      <div data-value="aabbb">aacccc</div>
-    </div>
+    <datalist>
+      <option value="pp">a</option>
+      <option value="abc">bbc12</option>
+      <option value="aabb">aaccc</option>
+    </datalist>
+  </select-autocomplete>
+
+
+  <select-autocomplete>
+    <label><input placeholder="Sök nåt annat... "></label>
+
+    <datalist>
+      <option value="pp">77</option>
+      <option value="abc">44</option>
+      <option value="aabb">77888</option>
+    </datalist>
   </select-autocomplete>
 
   Nånting annat
