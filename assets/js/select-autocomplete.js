@@ -1,11 +1,10 @@
-// Om man trycker på pil ikon neråd när ingen är funnen, visa alla
-
 class SelectAutocomplete extends HTMLElement {
   constructor() {
     super();
 
     this.handleKeydown = this.handleKeydown.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
+    this.handleEsc = this.handleEsc.bind(this);
     this.handleClickItem = this.handleClickItem.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleClickInput = this.handleClickInput.bind(this);
@@ -37,6 +36,7 @@ class SelectAutocomplete extends HTMLElement {
 
   storage() {
     this.store = {
+      values: this.values,
       input: this.querySelector("input"),
       list: this.querySelector("[data-list]"),
       items: this.querySelectorAll("[data-list] > div"),
@@ -47,13 +47,14 @@ class SelectAutocomplete extends HTMLElement {
     this.store.hasVisible = false;
 
     this.store.items.forEach((el) => {
-      const value = el.innerText.toLowerCase();
-      const input = this.store.input.value.toLowerCase();
+      const value = el.innerText;
+      const input = this.store.input.value;
+      const match = value.toLowerCase().indexOf(input.toLowerCase()) > -1;
 
-      if (input.length > 0 && value.indexOf(input) > -1) {
+      if (input !== "" && match) {
         el.removeAttribute("hidden");
         this.store.hasVisible = true;
-        el.innerHTML = value.replace(input, `<strong>${input}</strong>`);
+        el.innerHTML = this.boldString(value, input);
       } else {
         el.setAttribute("hidden", "");
       }
@@ -63,6 +64,11 @@ class SelectAutocomplete extends HTMLElement {
     this.activateFirst();
     this.triggerMenuDirection();
     this.done = false;
+  }
+
+  boldString(str, find) {
+    var reg = new RegExp("(" + find + ")", "gi");
+    return str.replace(reg, "<strong>$1</strong>");
   }
 
   triggerListVisibility() {
@@ -147,6 +153,7 @@ class SelectAutocomplete extends HTMLElement {
   triggerEvents() {
     this.onKeydown();
     this.onEnter();
+    this.onEsc();
 
     this.onClickInput();
     this.onClickItem();
@@ -174,7 +181,7 @@ class SelectAutocomplete extends HTMLElement {
 
   handleEnter(e) {
     if (e.keyCode === 13) {
-      if (this.store.input.value === "" && !this.active) {
+      if (this.store.input.value == "" && !this.active) {
         this.showAll();
       } else if (!this.done) {
         if (this.active) {
@@ -185,6 +192,17 @@ class SelectAutocomplete extends HTMLElement {
       } else {
         this.customEventSubmit();
       }
+    }
+  }
+
+  // Event enter
+  onEsc() {
+    this.store.input.addEventListener("keydown", this.handleEsc);
+  }
+
+  handleEsc(e) {
+    if (e.keyCode === 27) {
+      this.hideAll();
     }
   }
 
@@ -215,7 +233,7 @@ class SelectAutocomplete extends HTMLElement {
     e.preventDefault();
 
     if (this.dataset.open === "false") {
-      if (this.store.input.value === "") {
+      if (this.store.input.value == "") {
         this.showAll();
       } else {
         this.filter();

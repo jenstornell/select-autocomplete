@@ -1,6 +1,8 @@
 # Autocomplete input
 
-SCREENSHOT
+A select or input with autocomplete of predefined values.
+
+![](screenshot.gif)
 
 ## In short
 

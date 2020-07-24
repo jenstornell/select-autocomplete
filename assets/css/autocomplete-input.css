@@ -64,7 +64,7 @@ select-autocomplete [data-list] {
 }
 
 select-autocomplete [data-list] > div {
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
 }
 
 select-autocomplete [data-list] > [data-active] {

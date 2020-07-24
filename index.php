@@ -20,7 +20,7 @@
       <label><input name="whatever" placeholder="Sök län... "></label>
 
       <datalist>
-        <option value="pp">
+        <option value="Norde">
         <option value="abc">
         <option value="aabb">
       </datalist>
