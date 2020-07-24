@@ -9,26 +9,30 @@
 </head>
 
 <body>
-  <select-autocomplete>
-    <label><input placeholder="Sök län... "></label>
+  <form action="/action_page.php">
+    <select-autocomplete>
+      <label><input name="whatever" placeholder="Sök län... " autocomplete="off"></label>
 
-    <datalist>
-      <option value="pp">a</option>
-      <option value="abc">bbc12</option>
-      <option value="aabb">aaccc</option>
-    </datalist>
-  </select-autocomplete>
+      <datalist>
+        <option value="pp">a</option>
+        <option value="abc">båäöbc12</option>
+        <option value="aabb">aaccc</option>
+      </datalist>
+    </select-autocomplete>
 
 
-  <select-autocomplete>
-    <label><input placeholder="Sök nåt annat... "></label>
+    <select-autocomplete>
+      <label><input placeholder="Sök nåt annat... "></label>
 
-    <datalist>
-      <option value="pp">77</option>
-      <option value="abc">44</option>
-      <option value="aabb">77888</option>
-    </datalist>
-  </select-autocomplete>
+      <datalist>
+        <option value="pp">77</option>
+        <option value="abc">44</option>
+        <option value="aabb">77888</option>
+      </datalist>
+    </select-autocomplete>
+  </form>
+
+
 
   Nånting annat
 

@@ -1,5 +1,6 @@
 /*
-// Splitta strängen för strong
+// Rensa strong
+// Om man trycker på pil neråd när ingen är funnen, visa alla
 */
 
 class SelectAutocomplete extends HTMLElement {
@@ -19,6 +20,7 @@ class SelectAutocomplete extends HTMLElement {
 
   connectedCallback() {
     this.populate();
+    this.querySelector("datalist").remove();
     this.dataset.open = "false";
     this.storage();
     this.triggerEvents();
@@ -29,7 +31,7 @@ class SelectAutocomplete extends HTMLElement {
 
     this.querySelectorAll("option").forEach((el) => {
       console.log(el);
-      html += `<div data-value="${el.value}">${el.innerHTML}</div>\n`;
+      html += `<div data-value="${el.value}">${el.innerText}</div>\n`;
     });
 
     html = `<div data-list hidden>${html}</div>`;
@@ -56,12 +58,13 @@ class SelectAutocomplete extends HTMLElement {
     this.store.hasVisible = false;
 
     this.store.items.forEach((el) => {
-      const value = el.innerHTML.toLowerCase();
+      const value = el.innerText.toLowerCase();
       const input = this.store.input.value.toLowerCase();
 
       if (input.length > 0 && value.indexOf(input) > -1) {
         el.removeAttribute("hidden");
         this.store.hasVisible = true;
+        el.innerHTML = value.replace(input, `<strong>${input}</strong>`);
       } else {
         el.setAttribute("hidden", "");
       }
@@ -182,7 +185,7 @@ class SelectAutocomplete extends HTMLElement {
   handleEnter(e) {
     if (e.keyCode === 13) {
       if (!this.done) {
-        this.store.input.value = this.active.innerHTML;
+        this.store.input.value = this.active.innerText;
         this.handleClickEnter();
         this.done = true;
       } else {
@@ -249,7 +252,7 @@ class SelectAutocomplete extends HTMLElement {
   }
 
   handleClickItem(e) {
-    this.store.input.value = e.currentTarget.innerHTML;
+    this.store.input.value = e.currentTarget.innerText;
     this.handleClickEnter();
   }
 
