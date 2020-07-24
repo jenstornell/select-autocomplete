@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autocomplete input</title>
-  <link rel="stylesheet" href="assets/css/autocomplete-input.css?t=<?= time(); ?>">
+  <link rel="stylesheet" href="assets/css/select-autocomplete.css?t=<?= time(); ?>">
 
   <style>
     body {

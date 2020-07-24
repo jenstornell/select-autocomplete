@@ -6,6 +6,8 @@ A select or input with autocomplete of predefined values.
 
 ![](screenshot.gif)
 
+[See Demo](https://csspoo.com/select-autocomplete/example.html)
+
 ## In short
 
 - Simple to use
@@ -22,7 +24,7 @@ A select or input with autocomplete of predefined values.
 Place it within `<head></head>`.
 
 ```html
-<link rel="stylesheet" href="assets/css/autocomplete-input.css" />
+<link rel="stylesheet" href="assets/css/select-autocomplete.css" />
 ```
 
 ### Javaascript
