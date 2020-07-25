@@ -11,11 +11,11 @@ A select or input with autocomplete of predefined values.
 ## In short
 
 - Simple to use
-- Small filesize
+- Small filesize (1.5kB minified + gzipped)
 - Keyboard support
 - No dependencies
-- Html web component
-- Vanilla js
+- HTML web component
+- Vanilla JS
 
 ## Setup
 
