@@ -1,0 +1,62 @@
+select-autocomplete {
+  position: relative;
+  display: inline-block; }
+
+select-autocomplete *,
+select-autocomplete *:before,
+select-autocomplete *:after {
+  box-sizing: border-box; }
+
+select-autocomplete input {
+  border: none;
+  outline: none;
+  background: none;
+  padding: 0.75rem;
+  padding-right: 0;
+  font-family: inherit;
+  font-size: inherit; }
+
+select-autocomplete label {
+  border: 1px solid #ccc;
+  display: inline-flex;
+  cursor: default;
+  border-radius: 0.25rem;
+  overflow: hidden; }
+
+select-autocomplete label:after {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #eee;
+  opacity: 0.8;
+  width: 12px;
+  padding: 0 1rem; }
+
+select-autocomplete[data-open="true"] label:after {
+  transform: rotate(180deg); }
+
+select-autocomplete label:focus-within,
+select-autocomplete label:focus,
+select-autocomplete label:active {
+  border-color: #666; }
+
+select-autocomplete [data-list] {
+  font-size: 0.875rem;
+  cursor: default;
+  color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0.25rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background: #fff;
+  z-index: 1; }
+
+select-autocomplete [data-list] > div {
+  padding: 0.5rem 0.75rem; }
+
+select-autocomplete [data-list] > [data-active] {
+  background: #eee; }

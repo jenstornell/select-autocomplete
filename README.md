@@ -25,7 +25,7 @@ Place it within `<head></head>`.
 
 <!-- prettier-ignore -->
 ```html
-<link rel="stylesheet" href="assets/css/select-autocomplete.css">
+<link rel="stylesheet" href="assets/css/dist/select-autocomplete.min.css">
 ```
 
 ### Javaascript
@@ -33,7 +33,7 @@ Place it within `<head></head>`.
 In most cases place it just before `</body>`.
 
 ```html
-<script src="assets/js/select-autocomplete.js"></script>
+<script src="assets/js/dist/select-autocomplete.min.js"></script>
 ```
 
 ## Usage
@@ -74,6 +74,16 @@ The example below will add the `submit` event to the first `select-autocomplete`
     });
 </script>
 ```
+
+## Compared to input with datalist
+
+There is already a native way to provide autocomplete with combining an input field with a datalist. However there are some benefits of using this script instead.
+
+1. It's much easier to style, because it does not use the shadow dom.
+1. It's easier to manipulate the HTML, because it does not use the shadow dom.
+1. It behaves a bit different, better in our opinion.
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist
 
 ## Donate
 
