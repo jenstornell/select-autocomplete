@@ -98,6 +98,17 @@ class SelectAutocomplete extends HTMLElement {
     );
   }
 
+  // Custom event toggle
+  customEventToggle() {
+    this.dispatchEvent(
+      new CustomEvent("toggle", {
+        detail: {
+          open: this.dataset.open,
+        },
+      })
+    );
+  }
+
   hideAll() {
     this.store.list.setAttribute("hidden", "");
     this.store.items.forEach((el) => {
@@ -214,11 +225,15 @@ class SelectAutocomplete extends HTMLElement {
   handleClickInput(e) {
     e.stopPropagation();
 
+    this.handleCloseOthers();
+
     if (this.store.input.value == "") {
       this.showAll();
     } else {
       this.filter();
     }
+
+    this.customEventToggle();
   }
 
   // Event click label
@@ -233,6 +248,8 @@ class SelectAutocomplete extends HTMLElement {
     e.preventDefault();
 
     if (this.dataset.open === "false") {
+      this.handleCloseOthers();
+
       if (this.store.input.value == "") {
         this.showAll();
       } else {
@@ -243,6 +260,14 @@ class SelectAutocomplete extends HTMLElement {
     }
 
     this.store.input.focus();
+    this.customEventToggle();
+  }
+
+  handleCloseOthers() {
+    document.querySelectorAll("select-autocomplete").forEach((el) => {
+      el.dataset.open = "false";
+      el.querySelector("[data-list]").setAttribute("hidden", "");
+    });
   }
 
   // Event click outside

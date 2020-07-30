@@ -1,6 +1,6 @@
 # Select Autocomplete
 
-_Version 0.1_
+_Version 0.2 ([changelog](CHANGELOG.md))_
 
 A select or input with autocomplete of predefined values.
 
@@ -74,6 +74,10 @@ The example below will add the `submit` event to the first `select-autocomplete`
     });
 </script>
 ```
+
+### Toggle
+
+The `toggle` event is fired when the user toggles the item list by clicking the input field or the label.
 
 ## Compared to input with datalist
 
